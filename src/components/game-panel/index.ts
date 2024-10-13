@@ -1,15 +1,17 @@
 import './style.css';
 import type { ArrayOr } from 'hyplate/types';
-import { html, Panel, ref } from '../html';
-import { AutoRender, element, signal } from 'hyplate';
+import { html, Panel } from '../html';
+import { AutoRender, element, nil, signal } from 'hyplate';
 import { Main } from '../../game/main';
 import type { Game } from '../../game/game';
+import { myFetch, type Report } from '../../utils/fetch';
 
 export class GamePanel extends Panel {
   audio = element('audio');
   playZone = element('div');
   main = new Main(this.game);
   info = signal(false);
+  src = signal<string | null>(null);
   onend?: () => void;
   #touch = false;
   constructor(public readonly game: Game) {
@@ -20,6 +22,9 @@ export class GamePanel extends Panel {
     return html`<div>
       <${AutoRender}>${() => {
         this.info();
+        if (!this.src()) {
+          return nil;
+        }
         const { evaluator } = this.main;
         const { early, late } = evaluator.evaluate();
         const avg = evaluator.avg();
@@ -36,14 +41,13 @@ export class GamePanel extends Panel {
         </div>
         `;
       }}</${AutoRender}>
-      <audio ref=${ref(this.audio)} onEnded=${this.end}>
-        <source src=${this.game.song.path} />
+      <audio ref=${this.audio} onEnded=${this.end}>
       </audio>
-      <div ref=${ref(this.playZone)} class="play-zone"></div>
+      <div ref=${this.playZone} class="play-zone"></div>
     </div>`;
   }
 
-  async start() {
+  async start(report: Report) {
     this.#touch = !window.matchMedia('(hover: hover)').matches;
     if (this.#touch) {
       this.playZone.addEventListener('touchstart', this.tap);
@@ -51,8 +55,12 @@ export class GamePanel extends Panel {
       this.playZone.addEventListener('mousedown', this.tap);
     }
     window.addEventListener('keydown', this.key);
-    this.main.start();
+    const blob = await myFetch(report, this.game.song.path);
+    const src = URL.createObjectURL(blob);
+    this.src.set(src);
+    this.audio.src = src;
     await this.audio.play();
+    this.main.start();
   }
 
   key = (e: KeyboardEvent) => {
@@ -71,6 +79,10 @@ export class GamePanel extends Panel {
 
   end = () => {
     console.log('ended!');
+    const src = this.src();
+    if (src) {
+      URL.revokeObjectURL(src);
+    }
     this.audio.pause();
     this.playZone.removeEventListener('touchstart', this.tap);
     this.playZone.removeEventListener('mousedown', this.tap);

@@ -1,5 +1,25 @@
 {
   "[typescript]": {
     "editor.defaultFormatter": "biomejs.biome"
-  }
+  },
+  "lit-plugin.rules.no-boolean-in-attribute-binding": "off",
+  "lit-plugin.rules.no-complex-attribute-binding": "off",
+  "lit-plugin.rules.no-expressionless-property-binding":"off",
+  "lit-plugin.rules.no-incompatible-property-type": "off",
+  "lit-plugin.rules.no-incompatible-type-binding": "off",
+  "lit-plugin.rules.no-invalid-attribute-name": "off",
+  "lit-plugin.rules.no-invalid-boolean-binding": "off",
+  "lit-plugin.rules.no-invalid-css": "off",
+  "lit-plugin.rules.no-invalid-directive-binding": "off",
+  "lit-plugin.rules.no-invalid-tag-name": "off",
+  "lit-plugin.rules.no-missing-element-type-definition": "off",
+  "lit-plugin.rules.no-missing-import": "off",
+  "lit-plugin.rules.no-noncallable-event-binding": "off",
+  "lit-plugin.rules.no-nullable-attribute-binding": "off",
+  "lit-plugin.rules.no-unclosed-tag": "off",
+  "lit-plugin.rules.no-unknown-attribute": "off",
+  "lit-plugin.rules.no-unknown-event": "off",
+  "lit-plugin.rules.no-unknown-property": "off",
+  "lit-plugin.rules.no-unknown-slot": "off",
+  "lit-plugin.rules.no-unknown-tag-name": "off",
 }

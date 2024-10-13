@@ -4,8 +4,6 @@ import type { ArrayOr, Mountable, Rendered } from 'hyplate/types';
 
 export const html = htm.bind(h);
 
-export const ref = (el: unknown) => el as string;
-
 export abstract class Panel {
   #rendered: Rendered<unknown> | null = null;
   abstract render(): ArrayOr<JSX.Element>;
